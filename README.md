@@ -31,7 +31,21 @@ This project implements push notifications in a React Native CLI (Android-only) 
 
 ### Step 4: Configure Android Project for Firebase
 - In the `android/build.gradle` file, add the Google services classpath in the `buildscript` section.
+        classpath("com.android.tools.build:gradle:8.2.2") // ✅ specify version
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath("com.google.gms:google-services:4.3.15") // ✅ Firebase plugin
+
 - In the `android/app/build.gradle` file:
+- 
+        apply plugin: "com.google.gms.google-services" // ✅ Correct, should only appear once
+
+        dependencies {
+         implementation platform('com.google.firebase:firebase-bom:34.0.0')
+         implementation 'com.google.firebase:firebase-analytics'
+         implementation 'com.google.firebase:firebase-messaging' 
+         }
+  apply plugin: 'com.google.gms.google-services' // add this line at the bottom
+
   - Apply the Google services plugin.
   - Add Firebase Messaging as a dependency.
 
