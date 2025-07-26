@@ -1,20 +1,25 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { getFcmToken } from './components/utils/getFcmToken';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [fcmToken, setFcmToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await getFcmToken();
+      setFcmToken(token);
+    };
+
+    fetchToken();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
+      <Text>FCM Token:</Text>
+      <Text selectable style={styles.tokenText}>
+        {fcmToken ?? 'Fetching token...'}
+      </Text>
     </View>
   );
 }
@@ -22,6 +27,14 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  tokenText: {
+    marginTop: 10,
+    fontSize: 12,
+    color: '#333',
   },
 });
 
