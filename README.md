@@ -17,7 +17,6 @@ This project implements push notifications in a React Native CLI (Android-only) 
   - `@react-native-firebase/messaging`
   - `@notifee/react-native`
   - `react-native-mmkv` (optional for storing notification history)
-- Run `npx pod-install` after installation if you're also targeting iOS (for completeness).
 
 ---
 
@@ -44,7 +43,8 @@ This project implements push notifications in a React Native CLI (Android-only) 
          implementation 'com.google.firebase:firebase-analytics'
          implementation 'com.google.firebase:firebase-messaging' 
          }
-  apply plugin: 'com.google.gms.google-services' // add this line at the bottom
+         apply plugin: 'com.google.gms.google-services' // add this line at the bottom
+  
 
   - Apply the Google services plugin.
   - Add Firebase Messaging as a dependency.
