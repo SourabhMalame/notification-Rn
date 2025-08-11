@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { getFcmToken } from './components/utils/getFcmToken';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { requestNotificationPermission } from './components/permissions/Notification';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       setFcmToken(token);
     };
     fetchToken();
+    requestNotificationPermission();
   }, []);
 
   return (
