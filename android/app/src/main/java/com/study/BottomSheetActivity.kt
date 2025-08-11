@@ -41,20 +41,16 @@ class BottomSheetActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        // Handle cancel button click
         view.findViewById<Button>(R.id.cancelBtn).setOnClickListener {
-            // Simply dismiss the dialog
             dialog.dismiss()
-            // Finish the activity to close everything
             finish()
         }
 
-        // Show the dialog
+
         dialog.show()
         
-        // Optional: Handle dialog dismissal (when swiped down or back pressed)
         dialog.setOnDismissListener {
-            finish() // Close the activity when dialog is dismissed
+            finish() 
         }
     }
 }

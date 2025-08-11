@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { getFcmToken } from './components/utils/getFcmToken';
-import FlatListComponent from './components/extra/flatlist'; // ensure correct filename
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 function App() {
   const [fcmToken, setFcmToken] = useState<string | null>(null);
@@ -15,7 +16,7 @@ function App() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.tokenContainer}>
         <Text style={styles.heading}>FCM Token:</Text>
         <Text selectable style={styles.tokenText}>
@@ -23,10 +24,6 @@ function App() {
         </Text>
       </View>
 
-      {/* FlatListComponent takes full space */}
-      {/* <View style={styles.listContainer}> */}
-        <FlatListComponent />
-      {/* </View> */}
     </SafeAreaView>
   );
 }
