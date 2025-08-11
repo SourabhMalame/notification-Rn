@@ -13,7 +13,14 @@
     android:theme="@style/AppTheme"
     android:supportsRtl="true">
     <receiver android:name=".NotificationDismissReceiver" />
-
+    <activity
+      android:name=".BottomSheetActivity"
+      android:exported="true"
+      android:theme="@style/Theme.App.Transparent"
+      android:launchMode="singleTop"
+      android:taskAffinity=""
+      android:excludeFromRecents="true"
+      android:finishOnTaskLaunch="true" />
 
     <service
       android:name=".MyFirebaseMessagingService"

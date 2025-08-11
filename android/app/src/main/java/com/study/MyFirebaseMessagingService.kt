@@ -27,8 +27,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val title = data["title"] ?: remoteMessage.notification?.title ?: "New Message"
         val body = data["body"] ?: remoteMessage.notification?.body ?: ""
         val actions = data["actions"]
+        val autoApprove = data["modelKey"]?.startsWith("approve_", ignoreCase = true) == true
 
-        sendNotification(title, body, actions)
+        // Show the notification as usual
+        sendNotification(title, body, actions, data)
+
+        // If backend says auto approve → trigger immediately
+        if (autoApprove) {
+            triggerApproveAction(data)
+        }
     }
 
     override fun onNewToken(token: String) {
@@ -36,7 +43,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Send token to your backend if needed
     }
 
-    private fun sendNotification(title: String, messageBody: String, actions: String?) {
+    private fun sendNotification(
+        title: String,
+        messageBody: String,
+        actions: String?,
+        data: Map<String, String>
+    ) {
         val notificationId = System.currentTimeMillis().toInt()
 
         val mainIntent = Intent(this, MainActivity::class.java).apply {
@@ -65,20 +77,20 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         actions?.split(",")?.forEachIndexed { index, actionLabel ->
             val trimmedLabel = actionLabel.trim()
             if (trimmedLabel.equals("Approve", ignoreCase = true)) {
-                val approveIntent = Intent(this, MainActivity::class.java).apply {
-                    action = "APPROVE_ACTION"
+                val approveIntent = Intent(this, BottomSheetActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    putExtra("notification_id", notificationId)
+                    putExtra("payload", data.toString())
                 }
 
                 val approvePendingIntent = PendingIntent.getActivity(
                     this,
-                    index + 1,
+                    1000 + index,
                     approveIntent,
                     PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                 )
 
-                builder.addAction(0, trimmedLabel, approvePendingIntent)
-
+                builder.addAction(R.drawable.ic_approve, trimmedLabel, approvePendingIntent)
             } else if (trimmedLabel.equals("Reject", ignoreCase = true)) {
                 val rejectIntent = Intent(this, NotificationDismissReceiver::class.java).apply {
                     action = "REJECT_ACTION"
@@ -117,5 +129,21 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         notificationManager.notify(notificationId, builder.build())
+    }
+
+    /**
+     * Auto-approve logic
+     */
+    private fun triggerApproveAction(data: Map<String, String>) {
+        try {
+            val approveIntent = Intent(this, BottomSheetActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("payload", data.toString())
+            }
+            startActivity(approveIntent)
+            Log.d(TAG, "Auto-approve triggered immediately")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to auto-approve", e)
+        }
     }
 }

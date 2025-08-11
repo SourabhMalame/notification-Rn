@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { getFcmToken } from './components/utils/getFcmToken';
+import FlatListComponent from './components/extra/flatlist'; // ensure correct filename
 
 function App() {
   const [fcmToken, setFcmToken] = useState<string | null>(null);
@@ -14,34 +15,43 @@ function App() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={{ fontWeight: 'bold' }}>FCM Token:</Text>
-      <Text selectable style={styles.tokenText}>
-        {fcmToken ?? 'Fetching token...'}
-      </Text>
-
-      {/* 🔘 Button to trigger location-based notification */}
-      <View style={{ marginTop: 20 }}>
-        {/* <Button
-          title="Send Location Notification"
-          onPress={triggerLocationNotification}
-        /> */}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.tokenContainer}>
+        <Text style={styles.heading}>FCM Token:</Text>
+        <Text selectable style={styles.tokenText}>
+          {fcmToken ?? 'Fetching token...'}
+        </Text>
       </View>
-    </View>
+
+      {/* FlatListComponent takes full space */}
+      {/* <View style={styles.listContainer}> */}
+        <FlatListComponent />
+      {/* </View> */}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  tokenContainer: {
     padding: 16,
+    alignItems: 'center',
+  },
+  heading: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   tokenText: {
-    marginTop: 10,
+    marginTop: 8,
     fontSize: 12,
     color: '#333',
+  },
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 10,
   },
 });
 
