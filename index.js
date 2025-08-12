@@ -1,11 +1,16 @@
+// index.js
 import { AppRegistry } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import App from './App';
 import { name as appName } from './app.json';
-// import notifee, { AndroidImportance } from '@notifee/react-native';
+import { MMKV } from 'react-native-mmkv';
+
+const storage = new MMKV();
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('📥 FCM Background/Killed Message:', remoteMessage);
+  storage.set(`notif_${Date.now()}`, JSON.stringify(remoteMessage));
+  console.log(storage.getAllKeys())
 });
+
 
 AppRegistry.registerComponent(appName, () => App);
